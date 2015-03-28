@@ -1,0 +1,36 @@
+//
+//  PrefixHeader.pch
+//  FileReaderForPad
+//
+//  Created by yangboshan on 15/3/27.
+//  Copyright (c) 2015年 yangbs. All rights reserved.
+//
+
+#ifndef FileReaderForPad_PrefixHeader_pch
+#define FileReaderForPad_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import "FRHelper.h"
+
+#endif
+
+#ifdef DEBUG
+#define NSLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#define NSLog(...)
+#endif
+
+#endif
