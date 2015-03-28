@@ -13,12 +13,17 @@
 #import "FRNodeTableViewCell.h"
 #import "UIImage+FRCategory.h"
 #import "FRMacro.h"
+#import "FRToolbar.h"
+#import "PureLayout.h"
+#import "AppDelegate.h"
 
 
 @interface MasterViewController ()
 
 @property NSMutableArray *objects;
+
 @property (nonatomic,strong) UIBarButtonItem* addButton;
+@property (nonatomic,strong) FRToolbar* toolbar;
 
 @end
 
@@ -54,8 +59,13 @@ static NSString* cellId = @"cellId";
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    [self.view setBackgroundColor:RGB(236, 236, 236)];
     [self.tableView registerNib:[UINib nibWithNibName:@"FRNodeTableViewCell" bundle:nil] forCellReuseIdentifier:cellId];
+    
+    [self.view setBackgroundColor:RGB(236, 236, 236)];
+
+    
+        UISplitViewController *splitViewController = (UISplitViewController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+    [splitViewController.view addSubview:self.toolbar];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -138,9 +148,6 @@ static NSString* cellId = @"cellId";
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-//    FRNodeTableViewCell* cell = (FRNodeTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
-//    FRNodeModel* currentNode = cell.nodeModel;
     
     FRNodeModel* currentNode = self.objects[indexPath.row];
     
@@ -241,4 +248,11 @@ static NSString* cellId = @"cellId";
     }
 }
 
+
+-(FRToolbar*)toolbar{
+    if (!_toolbar) {
+        _toolbar = [[[NSBundle mainBundle] loadNibNamed:@"FRToolbar" owner:self options:nil] lastObject];
+    }
+    return _toolbar;
+}
 @end

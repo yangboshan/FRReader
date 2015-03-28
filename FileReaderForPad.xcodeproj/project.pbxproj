@@ -19,6 +19,8 @@
 		3E5E68C71AC6398A009C78B5 /* UIImage+FRCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68C61AC6398A009C78B5 /* UIImage+FRCategory.m */; };
 		3E5E68D01AC6549C009C78B5 /* FRSettingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68CF1AC6549C009C78B5 /* FRSettingManager.m */; };
 		3E5E68DE1AC68639009C78B5 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E5E68DD1AC68639009C78B5 /* QuickLook.framework */; };
+		3E9FF1B71AC6D18B009E96B9 /* FRToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FF1B61AC6D18B009E96B9 /* FRToolbar.m */; };
+		3E9FF1B91AC6D1A8009E96B9 /* FRToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E9FF1B81AC6D1A8009E96B9 /* FRToolbar.xib */; };
 		3EC6CD411AC53B87005AB8BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6CD401AC53B87005AB8BB /* main.m */; };
 		3EC6CD441AC53B87005AB8BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6CD431AC53B87005AB8BB /* AppDelegate.m */; };
 		3EC6CD471AC53B87005AB8BB /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6CD461AC53B87005AB8BB /* MasterViewController.m */; };
@@ -67,6 +69,9 @@
 		3E5E68CE1AC6549C009C78B5 /* FRSettingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRSettingManager.h; sourceTree = "<group>"; };
 		3E5E68CF1AC6549C009C78B5 /* FRSettingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRSettingManager.m; sourceTree = "<group>"; };
 		3E5E68DD1AC68639009C78B5 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
+		3E9FF1B51AC6D18B009E96B9 /* FRToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRToolbar.h; sourceTree = "<group>"; };
+		3E9FF1B61AC6D18B009E96B9 /* FRToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRToolbar.m; sourceTree = "<group>"; };
+		3E9FF1B81AC6D1A8009E96B9 /* FRToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FRToolbar.xib; sourceTree = "<group>"; };
 		3EC6CD3B1AC53B86005AB8BB /* FileReaderForPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FileReaderForPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EC6CD3F1AC53B87005AB8BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EC6CD401AC53B87005AB8BB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -143,6 +148,26 @@
 				3E04E0C41AC5AC490022F7F0 /* PureLayoutDefines.h */,
 			);
 			name = Purelayout;
+			sourceTree = "<group>";
+		};
+		3E9FF1B31AC6D128009E96B9 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3E04E0B61AC599CF0022F7F0 /* FRNodeTableViewCell.h */,
+				3E04E0B71AC599CF0022F7F0 /* FRNodeTableViewCell.m */,
+				3E04E0B81AC599CF0022F7F0 /* FRNodeTableViewCell.xib */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
+		3E9FF1B41AC6D134009E96B9 /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+				3E9FF1B51AC6D18B009E96B9 /* FRToolbar.h */,
+				3E9FF1B61AC6D18B009E96B9 /* FRToolbar.m */,
+				3E9FF1B81AC6D1A8009E96B9 /* FRToolbar.xib */,
+			);
+			name = Toolbar;
 			sourceTree = "<group>";
 		};
 		3EC6CD321AC53B86005AB8BB = {
@@ -224,9 +249,8 @@
 		3EC6CD681AC53DB7005AB8BB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3E04E0B61AC599CF0022F7F0 /* FRNodeTableViewCell.h */,
-				3E04E0B71AC599CF0022F7F0 /* FRNodeTableViewCell.m */,
-				3E04E0B81AC599CF0022F7F0 /* FRNodeTableViewCell.xib */,
+				3E9FF1B41AC6D134009E96B9 /* Toolbar */,
+				3E9FF1B31AC6D128009E96B9 /* Cell */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -344,6 +368,7 @@
 				TargetAttributes = {
 					3EC6CD3A1AC53B86005AB8BB = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = W2S49VS6FE;
 					};
 					3EC6CD561AC53B87005AB8BB = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -378,6 +403,7 @@
 				3EC6CD4D1AC53B87005AB8BB /* Main.storyboard in Resources */,
 				3E04E0BA1AC599CF0022F7F0 /* FRNodeTableViewCell.xib in Resources */,
 				3EC6CD521AC53B87005AB8BB /* LaunchScreen.xib in Resources */,
+				3E9FF1B91AC6D1A8009E96B9 /* FRToolbar.xib in Resources */,
 				3E5E68C41AC63901009C78B5 /* Lantinghei_0.ttf in Resources */,
 				3EC6CD4F1AC53B87005AB8BB /* Images.xcassets in Resources */,
 			);
@@ -410,6 +436,7 @@
 				3EC6CD4A1AC53B87005AB8BB /* DetailViewController.m in Sources */,
 				3E04E0C61AC5AC490022F7F0 /* NSArray+PureLayout.m in Sources */,
 				3E04E0AD1AC587310022F7F0 /* FRModel.m in Sources */,
+				3E9FF1B71AC6D18B009E96B9 /* FRToolbar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

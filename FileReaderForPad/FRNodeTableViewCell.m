@@ -38,7 +38,7 @@
         case kFRNodeTypeDocFile:
             [self.nameLabel setFont:Lantinghei(15)];
             [self.nameLabel setTextColor:[UIColor grayColor]];
-            [self.iconImageView setImage:[UIImage imageNamed:@"word_icon2"]];
+            [self.iconImageView setImage:[UIImage imageNamed:@"word_icon1"]];
             break;
             
         case kFRNodeTypePDFFile:
