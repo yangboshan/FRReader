@@ -14,14 +14,14 @@
 @implementation FRNodeTableViewCell
 
 - (void)awakeFromNib {
-    
-    [self.bgImageView setImage:[UIImage imageNamed:@"copymove-cell-bg.png"]];
-}
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:0];
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0];
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:0];
+ }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 -(void)setNodeModel:(FRNodeModel *)nodeModel{

@@ -15,7 +15,6 @@
 		3E04E0C51AC5AC490022F7F0 /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0BD1AC5AC490022F7F0 /* ALView+PureLayout.m */; };
 		3E04E0C61AC5AC490022F7F0 /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0BF1AC5AC490022F7F0 /* NSArray+PureLayout.m */; };
 		3E04E0C71AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0C11AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m */; };
-		3E04E0CA1AC5AECE0022F7F0 /* PrefixHeader.pch in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0C81AC5AD080022F7F0 /* PrefixHeader.pch */; };
 		3E5E68C41AC63901009C78B5 /* Lantinghei_0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E68C31AC63901009C78B5 /* Lantinghei_0.ttf */; };
 		3E5E68C71AC6398A009C78B5 /* UIImage+FRCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68C61AC6398A009C78B5 /* UIImage+FRCategory.m */; };
 		3E5E68D01AC6549C009C78B5 /* FRSettingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68CF1AC6549C009C78B5 /* FRSettingManager.m */; };
@@ -61,7 +60,6 @@
 		3E04E0C21AC5AC490022F7F0 /* PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayout.h; sourceTree = "<group>"; };
 		3E04E0C31AC5AC490022F7F0 /* PureLayout+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PureLayout+Internal.h"; sourceTree = "<group>"; };
 		3E04E0C41AC5AC490022F7F0 /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayoutDefines.h; sourceTree = "<group>"; };
-		3E04E0C81AC5AD080022F7F0 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		3E04E0C91AC5AD570022F7F0 /* FRHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRHelper.h; sourceTree = "<group>"; };
 		3E5E68C31AC63901009C78B5 /* Lantinghei_0.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lantinghei_0.ttf; sourceTree = "<group>"; };
 		3E5E68C51AC6398A009C78B5 /* UIImage+FRCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FRCategory.h"; sourceTree = "<group>"; };
@@ -110,7 +108,6 @@
 			children = (
 				3E04E0B01AC587870022F7F0 /* FRMacro.h */,
 				3E04E0AF1AC5875D0022F7F0 /* FRGCDSingleton.h */,
-				3E04E0C81AC5AD080022F7F0 /* PrefixHeader.pch */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -401,7 +398,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E5E68D01AC6549C009C78B5 /* FRSettingManager.m in Sources */,
-				3E04E0CA1AC5AECE0022F7F0 /* PrefixHeader.pch in Sources */,
 				3E5E68C71AC6398A009C78B5 /* UIImage+FRCategory.m in Sources */,
 				3E04E0AA1AC586A60022F7F0 /* NSString+FRCategory.m in Sources */,
 				3E04E0B31AC588980022F7F0 /* FRNodeModel.m in Sources */,
