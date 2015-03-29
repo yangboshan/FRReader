@@ -18,4 +18,10 @@
 
 -(NSMutableArray*)getFileTreeByPath:(NSString*)path level:(NSInteger)level;
 
+-(BOOL)createFolderByPath:(NSString*)folderPath;
+
+-(BOOL)deleteByPath:(NSString*)path;
+
+-(BOOL)renameByPath1:(NSString*)path1 path2:(NSString*)path2 ;
+
 @end

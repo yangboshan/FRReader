@@ -22,7 +22,7 @@
 
 #define TheameColor RGBA(32, 193, 122, 1)
 #define TheameColorAlpha(a) RGBA(32, 193, 122, a)
-#define NavBarColorAlpha(a) RGBA(25,99,52,a)
+#define NavBarColorAlpha(a) RGBA(37,159,219,a)
 #define BorderColor RGB(223, 223, 223).CGColor
 #define MaskColor RGBA(0, 0, 0, 0.5)
 

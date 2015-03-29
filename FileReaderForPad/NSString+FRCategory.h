@@ -10,4 +10,7 @@
 
 @interface NSString (FRCategory)
 
+-(BOOL)stringIsNilOrEmpty;
+
+
 @end

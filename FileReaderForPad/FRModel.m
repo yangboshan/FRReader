@@ -44,6 +44,43 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(FRModel)
     return documentsDirectory;
 }
 
+-(BOOL)createFolderByPath:(NSString*)folderPath{
+    
+    NSError *error;
+    [[NSFileManager defaultManager] createDirectoryAtPath:folderPath withIntermediateDirectories:NO attributes:nil error:&error];
+    
+    if (error) {
+        return NO;
+    }else{
+        return YES;
+    }
+}
+
+-(BOOL)deleteByPath:(NSString*)path{
+    
+    NSError* error;
+    [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    
+    if (error) {
+        return NO;
+    }else{
+        return YES;
+    }
+}
+
+-(BOOL)renameByPath1:(NSString*)path1 path2:(NSString*)path2{
+    
+    NSError* error;
+    [[NSFileManager defaultManager] moveItemAtPath:path1 toPath:path2 error:&error];
+    
+    if (error) {
+        return NO;
+    }else{
+        return YES;
+    }
+}
+
+
 -(NSMutableArray*)getFileTreeByPath:(NSString*)path level:(NSInteger)level{
         
     NSMutableArray* nodeList = [NSMutableArray array];

@@ -16,7 +16,13 @@
 #import "FRToolbar.h"
 #import "PureLayout.h"
 #import "AppDelegate.h"
+#import "NSString+FRCategory.h"
 
+typedef NS_ENUM(NSInteger, kFRAlertViweTag){
+    kFRAlertViweTagCreateFolder = 1000,
+    kFRAlertViweTagDeleteItem,
+    kFRAlertViweTagRenameItem,
+};
 
 @interface MasterViewController ()
 
@@ -24,7 +30,10 @@
 
 @property (nonatomic,strong) UIBarButtonItem* addButton;
 @property (nonatomic,strong) FRToolbar* toolbar;
-
+@property (nonatomic,strong) FRNodeModel* renameModel;
+@property (nonatomic,strong) FRNodeModel* selectedModel;
+@property (nonatomic,strong) NSIndexPath *selectedIndexPath;
+@property (nonatomic,strong) NSIndexPath *editIndexPath;
 @end
 
 static NSString* cellId = @"cellId";
@@ -44,7 +53,7 @@ static NSString* cellId = @"cellId";
     self.title = @"文件目录";
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    self.addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    self.addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(createFolder:)];
     self.navigationItem.rightBarButtonItem = self.addButton;
     [self.addButton setEnabled:NO];
     
@@ -64,7 +73,7 @@ static NSString* cellId = @"cellId";
     [self.view setBackgroundColor:RGB(236, 236, 236)];
 
     
-        UISplitViewController *splitViewController = (UISplitViewController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+    UISplitViewController *splitViewController = (UISplitViewController *)[UIApplication sharedApplication].delegate.window.rootViewController;
     [splitViewController.view addSubview:self.toolbar];
 }
 
@@ -74,32 +83,151 @@ static NSString* cellId = @"cellId";
 
 #pragma mark - Methods
 
-
-- (void)insertNewObject:(id)sender {
+//新建文件夹
+- (void)createFolder:(id)sender {
     
-    NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-    FRNodeModel* selectedModel = self.objects[selectedIndexPath.row];
-
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"新建" message:[NSString stringWithFormat:@"点击确定,将在<%@>下新建目录",selectedModel.nodeName] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    //获取当前选择的节点
+    self.selectedIndexPath = [self.tableView indexPathForSelectedRow];
+    FRNodeModel* selectedModel = self.objects[self.selectedIndexPath.row];
+    self.selectedModel = selectedModel;
+    
+    //弹框让用户输入文件夹名称
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"新建"
+                                                        message:[NSString stringWithFormat:@"点击确定,将在<%@>下新建目录",selectedModel.nodeName]
+                                                       delegate:self
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"确定", nil];
+    
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alertView.tag = kFRAlertViweTagCreateFolder;
     [alertView show];
     
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    switch (buttonIndex) {
-        case 0:
-            break;
-        case 1:
-            [self addFolderAtPath:[[alertView textFieldAtIndex:0] text]];
-            break;
-        default:
-            break;
+    
+    if (buttonIndex == 1) {
+        
+        switch (alertView.tag) {
+                
+            case kFRAlertViweTagCreateFolder:
+                
+                [self addFolderByName:[[alertView textFieldAtIndex:0] text]];
+
+                break;
+            case kFRAlertViweTagDeleteItem:
+                
+                [self delete];
+
+                break;
+                
+            case kFRAlertViweTagRenameItem:
+                [self renameByName:[[alertView textFieldAtIndex:0] text]];
+                break;
+            default:
+                break;
+        }
     }
 }
 
--(void)addFolderAtPath:(NSString*)path{
-    NSLog(@"%@",path);
+-(void)renameByName:(NSString*)name{
+    
+    NSString* path1= self.renameModel.nodePath;
+    NSString* path2 = [[path1 stringByDeletingLastPathComponent] stringByAppendingPathComponent:name];
+    BOOL isSuccess = [[FRModel sharedFRModel] renameByPath1:path1 path2:path2];
+    
+    if (!isSuccess) {
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"重命名失败"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil, nil];
+        [alertView show];
+        return;
+        
+    }else{
+        
+        self.renameModel.nodeName = name;
+        self.renameModel.nodePath = path2;
+        
+        //清空所有子节点 或者可以修改所有自节点的路径
+        [self.renameModel.children removeAllObjects];
+        
+        [self.tableView reloadData];
+    }
+}
+
+
+-(void)delete{
+    
+    FRNodeModel* currentModel = self.objects[self.editIndexPath.row];
+    BOOL isSuccess = [[FRModel sharedFRModel] deleteByPath:currentModel.nodePath];
+    
+    if (!isSuccess) {
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"删除失败"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil, nil];
+        [alertView show];
+        return;
+    }
+    
+    //从父节点的叶子节点集合里面移除自己
+    if (currentModel.parent) {
+        [currentModel.parent.children removeObject:currentModel];
+
+    }
+    
+    //递归删除所有叶子节点
+    [self shrinkThisRows:currentModel.children];
+    
+    //删掉当前节点
+    NSInteger indexToRemove = [self.objects indexOfObjectIdenticalTo:currentModel];
+    if (indexToRemove != NSNotFound) {
+        
+        [self.objects removeObjectAtIndex:indexToRemove];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexToRemove inSection:0]]
+                              withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+-(void)addFolderByName:(NSString*)name{
+    
+    //文件夹名称为空返回
+    if ([name stringIsNilOrEmpty]) {
+        return;
+    }
+    
+    NSString* folderPath = [self.selectedModel.nodePath stringByAppendingPathComponent:name];
+    NSLog(@"%@",folderPath);
+    
+    //新建文件夹
+    BOOL isSuccess = [[FRModel sharedFRModel] createFolderByPath:folderPath];
+    
+    //失败了 提示
+    if (!isSuccess) {
+        
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"新建文件夹失败"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil, nil];
+        [alertView show];
+    
+    //新建成功
+    }else{
+        
+        //构建新的节点 并添加到列表中
+        NSInteger level = self.selectedModel.nodeLevel; ++ level;
+        
+        FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:name path:folderPath level:level type:kFRNodeTypeFolder];
+        [self.selectedModel.children addObject:nodeModel];
+        NSInteger index = self.selectedIndexPath.row + 1;
+        NSArray* folderArray = @[[NSIndexPath indexPathForRow:index inSection:0]];
+        [self.objects insertObject:nodeModel atIndex:index++];
+        [self.tableView insertRowsAtIndexPaths:folderArray withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 #pragma mark - Segues
@@ -139,6 +267,11 @@ static NSString* cellId = @"cellId";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     FRNodeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId forIndexPath:indexPath];
+    
+    UILongPressGestureRecognizer* longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    longPress.minimumPressDuration = 2.0;
+    [cell addGestureRecognizer:longPress];
+    
 
     FRNodeModel *nodeModel = self.objects[indexPath.row];
     cell.nodeModel = nodeModel;
@@ -147,31 +280,63 @@ static NSString* cellId = @"cellId";
     return cell;
 }
 
+-(void)handleLongPress:(UIGestureRecognizer*)gesture{
+    
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        
+        FRNodeTableViewCell* cell = (FRNodeTableViewCell*)gesture.view;
+        self.renameModel = cell.nodeModel;
+        NSString* tip = (cell.nodeModel.nodeType == kFRNodeTypeFolder) ? @"请输入新的文件夹名称" :@"请输入新的文件名称";
+        
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:tip
+                                                            message:[NSString stringWithFormat:@"该名称将会替代<%@>",
+                                                                     cell.nodeModel.nodeName]
+                                                           delegate:self
+                                                  cancelButtonTitle:@"取消"
+                                                  otherButtonTitles:@"确定", nil];
+        
+        alertView.tag = kFRAlertViweTagRenameItem;
+        alertView.alertViewStyle = UIAlertViewStylePlainTextInput ;
+        [alertView show];
+        
+        NSLog(@"%@",cell.nodeModel.nodeName);
+    }
+}
+
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    //获取当前节点
     FRNodeModel* currentNode = self.objects[indexPath.row];
     
-    if (currentNode.nodeType == kFRNodeTypeFolder) {
-        [self.addButton setEnabled:YES];
-    }else{
-        [self.addButton setEnabled:NO];
-    }
+    //如果该节点是文件夹 enable 添加文件夹功能
+    [self.addButton setEnabled:(currentNode.nodeType == kFRNodeTypeFolder) ? YES : NO];
     
     BOOL isExpanded;
     
     NSInteger index = indexPath.row;
+    
+    //如果当前节点不是文件夹 则打开文档
     if (currentNode.nodeType != kFRNodeTypeFolder) {
-        
         [self performSegueWithIdentifier:@"showDetail" sender:nil];
-        
+    
+    //当前节点为文件夹
     }else{
         
-        NSArray* children = [[FRModel sharedFRModel] getFileTreeByPath:currentNode.nodePath level:currentNode.nodeLevel];
+        //获取节点下的列表
+        NSMutableArray* children = [[FRModel sharedFRModel] getFileTreeByPath:currentNode.nodePath level:currentNode.nodeLevel];
         
+        [children enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            FRNodeModel* child = obj;
+            child.parent = currentNode;
+        }];
+        
+        //如果已有子节点集合则使用
         if (currentNode.children) {
             children = currentNode.children;
         }
         
+        //判断是否已经展开
         if (self.objects.count-1 > indexPath.row) {
             
             FRNodeModel* nextNode = self.objects[++index];
@@ -184,6 +349,8 @@ static NSString* cellId = @"cellId";
             }
         }
         
+        
+        //展开
         if (!isExpanded) {
             
             index = indexPath.row + 1;
@@ -191,11 +358,14 @@ static NSString* cellId = @"cellId";
             currentNode.children = children;
             
             for(FRNodeModel* nodeModel in children){
+                
                 [addList addObject:[NSIndexPath indexPathForRow:index inSection:0]];
                 [self.objects insertObject:nodeModel atIndex:index++];
             }
-            [tableView insertRowsAtIndexPaths:addList withRowAnimation:UITableViewRowAnimationFade];
             
+            [tableView insertRowsAtIndexPaths:addList withRowAnimation:UITableViewRowAnimationFade];
+        
+        //收起
         }else{
             
             [self shrinkThisRows:children];
@@ -203,37 +373,27 @@ static NSString* cellId = @"cellId";
     }
 }
 
+//收起
 -(void)shrinkThisRows:(NSArray*)list{
     
+    //遍历子节点
     for(FRNodeModel *nodeModel in list ) {
-        
-        NSUInteger indexToRemove=[self indexOfNode:nodeModel];
+    
+        NSUInteger indexToRemove=[self.objects indexOfObjectIdenticalTo:nodeModel];
         NSArray* children = nodeModel.children;
         
+        //递归子节点 执行收起
         if (children && children.count) {
             [self shrinkThisRows:children];
         }
         
-        NSInteger index = [self indexOfNode:nodeModel];
-        if (index!=NSNotFound) {
+        if (indexToRemove!=NSNotFound) {
             
-            [self.objects removeObjectAtIndex:index];
+            [self.objects removeObjectAtIndex:indexToRemove];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexToRemove inSection:0]]
                                   withRowAnimation:UITableViewRowAnimationFade];
         }
     }
-}
-
--(NSInteger)indexOfNode:(FRNodeModel*)node{
-    
-    for(int i = 0; i < self.objects.count; i++){
-        FRNodeModel* nodeModel = self.objects[i];
-        if ([nodeModel isEqual:node]) {
-            return i;
-        }
-    }
-    
-    return NSNotFound;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -241,11 +401,22 @@ static NSString* cellId = @"cellId";
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.objects removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-    }
+        
+        self.editIndexPath = indexPath;
+        
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"确定要删除吗?如果删除文件夹该文件夹下面的所有内容都会被删除"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"取消"
+                                                  otherButtonTitles:@"确定", nil];
+        
+        [alertView setTag:kFRAlertViweTagDeleteItem];
+        [alertView show];
+
+
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {}
 }
 
 

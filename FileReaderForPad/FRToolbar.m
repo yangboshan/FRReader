@@ -32,7 +32,7 @@
     [self.settingBtn setImageEdgeInsets:UIEdgeInsetsMake(-1, -5, 0, 0)];
     [self.settingBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -10)];
     
-    [self.toolbar setBackgroundImage:[UIImage imageWithColor:RGBA(247, 247, 247,0.8)] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    [self.toolbar setBackgroundImage:[UIImage imageWithColor:RGBA(247, 247, 247,0.9)] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 }
 
 

@@ -34,4 +34,14 @@
     return NO;
 }
 
+//节点路径
+-(NSString*)nodePath{
+    
+    if (!self.parent) {
+        return [[FRModel documentPath] stringByAppendingString:self.nodeName];
+    } else{
+        return [self.parent.nodePath stringByAppendingPathComponent:self.nodeName];
+    }
+}
+
 @end

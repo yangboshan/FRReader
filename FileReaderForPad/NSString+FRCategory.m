@@ -10,4 +10,8 @@
 
 @implementation NSString (FRCategory)
 
+-(BOOL)stringIsNilOrEmpty{
+    return !(self && self.length);
+}
+
 @end
