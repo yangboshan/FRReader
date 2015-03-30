@@ -171,10 +171,13 @@
     [_session stopRunning];
     [timer invalidate];
     
-    stringValue = @"核心动画编程指南1.pdf";
+    //根据二维码结果检索
     NSArray* results = [[FRModel sharedFRModel] searchDirectoryByFileName:stringValue];
     
+    //有相关记录
     if (results.count) {
+        
+        //记录超过1条 显示列表供用户选择
         if (results.count>1) {
             FRSearchResultViewController *searchResult = [[FRSearchResultViewController alloc] initWithData:results block:^(NSString *file) {
                 [self dismissViewControllerAnimated:YES completion:^{
@@ -182,11 +185,15 @@
                 }];
             }];
             [self.navigationController pushViewController:searchResult animated:NO];
+            
+        //只有一条 直接显示文档
         }else{
             [self dismissViewControllerAnimated:YES completion:^{
                 self.scanFinishBlock(results[0],kFRScanResultFlagNormal);
             }];
         }
+        
+    //没有记录
     }else{
         [self dismissViewControllerAnimated:YES completion:^{
             self.scanFinishBlock(stringValue,kFRScanResultFlagNone);
