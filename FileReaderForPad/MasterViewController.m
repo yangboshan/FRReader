@@ -55,14 +55,29 @@ static NSString* cellId = @"cellId";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"文件目录";
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑" style:UIBarButtonItemStyleBordered target:self action:@selector(editAction:)];
+    self.navigationItem.leftBarButtonItem = editButton;
 
     self.addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(createFolder:)];
     self.navigationItem.rightBarButtonItem = self.addButton;
-    [self.addButton setEnabled:NO];
+    [self.addButton setEnabled:YES];
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     [self initialSetup];
+}
+
+-(void)editAction:(UIBarButtonItem*)editButton{
+    
+    if ([editButton.title isEqualToString:@"编辑"]) {
+        [editButton setTitle:@"完成"];
+        [editButton setStyle:UIBarButtonItemStyleDone];
+        [self.tableView setEditing:YES animated:YES];
+    }else{
+        [editButton setTitle:@"编辑"];
+        [editButton setStyle:UIBarButtonItemStylePlain];
+        [self.tableView setEditing:NO animated:YES];
+    }
 }
 
 -(void)initialSetup{
@@ -120,12 +135,19 @@ static NSString* cellId = @"cellId";
     
     //获取当前选择的节点
     self.selectedIndexPath = [self.tableView indexPathForSelectedRow];
-    FRNodeModel* selectedModel = self.objects[self.selectedIndexPath.row];
-    self.selectedModel = selectedModel;
+    if (self.selectedIndexPath) {
+        self.selectedModel = self.objects[self.selectedIndexPath.row];
+        
+    //根节点
+    }else{
+        self.selectedModel = [[FRNodeModel alloc] initWithName:@"根目录" path:[NSString documentPath] level:0 type:kFRNodeTypeFolder];
+    }
+    
+
     
     //弹框让用户输入文件夹名称
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"新建"
-                                                        message:[NSString stringWithFormat:@"点击确定,将在<%@>下新建目录",selectedModel.nodeName]
+                                                        message:[NSString stringWithFormat:@"点击确定,将在<%@>下新建文件夹",self.selectedModel.nodeName]
                                                        delegate:self
                                               cancelButtonTitle:@"取消"
                                               otherButtonTitles:@"确定", nil];
@@ -169,7 +191,13 @@ static NSString* cellId = @"cellId";
         [self.selectedModel.children addObject:nodeModel];
         nodeModel.parent = self.selectedModel;
         
-        NSInteger index = self.selectedIndexPath.row + 1;
+        NSInteger index;
+        if(self.selectedIndexPath){
+            index = self.selectedIndexPath.row + 1;
+        }else{
+            index = self.objects.count;
+        }
+        
         NSArray* folderArray = @[[NSIndexPath indexPathForRow:index inSection:0]];
         [self.objects insertObject:nodeModel atIndex:index++];
         [self.tableView insertRowsAtIndexPaths:folderArray withRowAnimation:UITableViewRowAnimationFade];
@@ -324,7 +352,7 @@ static NSString* cellId = @"cellId";
     FRNodeModel* currentNode = self.objects[indexPath.row];
     
     //如果该节点是文件夹 enable 添加文件夹功能
-    [self.addButton setEnabled:(currentNode.nodeType == kFRNodeTypeFolder) ? YES : NO];
+    [self.addButton setEnabled:(currentNode.nodeType > kFRNodeTypeFolder) ? NO : YES];
     
     BOOL isExpanded;
     
@@ -409,7 +437,7 @@ static NSString* cellId = @"cellId";
         self.editIndexPath = indexPath;
         
         UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                            message:@"确定要删除吗?如果删除文件夹该文件夹下面的所有内容都会被删除"
+                                                            message:@"确定要删除吗?"
                                                            delegate:self
                                                   cancelButtonTitle:@"取消"
                                                   otherButtonTitles:@"确定", nil];
