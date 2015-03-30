@@ -10,4 +10,5 @@
 
 @interface FRSearchResultViewController : UIViewController
 
+-(instancetype)initWithData:(NSArray*)data;
 @end
