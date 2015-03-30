@@ -40,18 +40,14 @@
 //根据树结构 动态获取节点路径
 -(NSString*)nodePath{
     
-    if (self.nodeLevel == 0) {
-        
+    if (!self.nodeLevel) {
         return [NSString documentPath];
         
     } else{
         
         if (self.parent) {
-                    
             return [self.parent.nodePath stringByAppendingPathComponent:self.nodeName];
-            
         }else{
-            
             return [[NSString documentPath] stringByAppendingPathComponent:self.nodeName];
         }
     }

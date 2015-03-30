@@ -57,11 +57,12 @@ static NSString* cellId = @"cellId";
     self.title = @"文件目录";
     
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑" style:UIBarButtonItemStyleBordered target:self action:@selector(editAction:)];
-    self.navigationItem.leftBarButtonItem = editButton;
-
     self.addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(createFolder:)];
-    self.navigationItem.rightBarButtonItem = self.addButton;
     [self.addButton setEnabled:YES];
+    
+    self.navigationItem.leftBarButtonItem = editButton;
+    self.navigationItem.rightBarButtonItem = self.addButton;
+    ;
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     [self initialSetup];
@@ -125,6 +126,11 @@ static NSString* cellId = @"cellId";
             default:
                 break;
         }
+    }else{
+        
+        if (alertView.tag == kFRAlertViweTagDeleteItem) {
+            [self.tableView setEditing:NO animated:YES];
+        }
     }
 }
 
@@ -140,7 +146,10 @@ static NSString* cellId = @"cellId";
         
     //根节点
     }else{
-        self.selectedModel = [[FRNodeModel alloc] initWithName:@"根目录" path:[NSString documentPath] level:0 type:kFRNodeTypeFolder];
+        self.selectedModel = [[FRNodeModel alloc] initWithName:@"根目录"
+                                                          path:[NSString documentPath]
+                                                         level:0
+                                                          type:kFRNodeTypeFolder];
     }
     
 
@@ -187,7 +196,10 @@ static NSString* cellId = @"cellId";
         //构建新的节点 并添加到列表中
         NSInteger level = self.selectedModel.nodeLevel; ++ level;
         
-        FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:name path:nil level:level type:kFRNodeTypeFolder];
+        FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:name
+                                                              path:nil
+                                                             level:level
+                                                              type:kFRNodeTypeFolder];
         [self.selectedModel.children addObject:nodeModel];
         nodeModel.parent = self.selectedModel;
         
@@ -347,14 +359,11 @@ static NSString* cellId = @"cellId";
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    //获取当前节点
+ 
     FRNodeModel* currentNode = self.objects[indexPath.row];
-    
-    //如果该节点是文件夹 enable 添加文件夹功能
     [self.addButton setEnabled:(currentNode.nodeType > kFRNodeTypeFolder) ? NO : YES];
     
-    BOOL isExpanded;
+    BOOL isAlreadyExpanded;
     
     NSInteger index = indexPath.row;
     
@@ -377,14 +386,14 @@ static NSString* cellId = @"cellId";
             
             for(FRNodeModel* nodeModel in children){
                 if ([nodeModel isEqual:nextNode]) {
-                    isExpanded = YES;
+                    isAlreadyExpanded = YES;
                     break;
                 }
             }
         }
         
         //展开
-        if (!isExpanded) {
+        if (!isAlreadyExpanded) {
             
             index = indexPath.row + 1;
             NSMutableArray* addList = [NSMutableArray array];
