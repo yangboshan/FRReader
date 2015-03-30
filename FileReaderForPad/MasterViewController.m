@@ -33,6 +33,9 @@ typedef NS_ENUM(NSInteger, kFRAlertViweTag){
 @property (nonatomic,strong) FRToolbar* toolbar;
 @property (nonatomic,strong) FRNodeModel* renameModel;
 @property (nonatomic,strong) FRNodeModel* selectedModel;
+@property (nonatomic,strong) FRNodeModel* searchResultModel;
+@property (nonatomic,assign) BOOL fromTableView;
+
 @property (nonatomic,strong) NSIndexPath *selectedIndexPath;
 @property (nonatomic,strong) NSIndexPath *editIndexPath;
 @end
@@ -239,8 +242,15 @@ static NSString* cellId = @"cellId";
     
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        id object = self.objects[indexPath.row];
+        id object;
+        
+        if (self.fromTableView) {
+            NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+            object = self.objects[indexPath.row];
+        }else{
+            object = self.searchResultModel;
+        }
+
         DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
         [controller setDetailItem:object];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
@@ -322,6 +332,7 @@ static NSString* cellId = @"cellId";
     
     //如果当前节点不是文件夹 则打开文档
     if (currentNode.nodeType != kFRNodeTypeFolder) {
+        self.fromTableView = YES;
         [self performSegueWithIdentifier:@"showDetail" sender:nil];
     
     //当前节点为文件夹
@@ -426,7 +437,14 @@ static NSString* cellId = @"cellId";
 
 -(void)showCamera{
     
-    FRScanViewController *scan = [FRScanViewController new];
+    FRScanViewController *scan = [[FRScanViewController alloc] initWithFinishBlock:^(NSString *file) {
+        
+        self.fromTableView = NO;
+        self.searchResultModel = [[FRNodeModel alloc] initWithName:[file lastPathComponent] path:file level:0 type:0];
+        [self performSegueWithIdentifier:@"showDetail" sender:nil];
+        
+    }];
+    
     UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:scan];
     nav.view.autoresizingMask = UIViewAutoresizingNone;
     nav.modalPresentationStyle = UIModalPresentationFormSheet;

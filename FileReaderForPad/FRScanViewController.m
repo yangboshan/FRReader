@@ -9,10 +9,14 @@
 #import "FRScanViewController.h"
 #import "FRMacro.h"
 #import "PureLayout.h"
+#import "FRModel.h"
+#import "FRSearchResultViewController.h"
+
 
 
 @interface FRScanViewController ()
 
+@property(nonatomic,copy) SendSearchResult scanFinishBlock;
 @end
 
 @implementation FRScanViewController
@@ -21,6 +25,14 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+    }
+    return self;
+}
+
+-(instancetype)initWithFinishBlock:(SendSearchResult)finish{
+    self = [super init];
+    if (self) {
+        self.scanFinishBlock = finish;
     }
     return self;
 }
@@ -145,8 +157,8 @@
     [_session startRunning];
 }
 #pragma mark AVCaptureMetadataOutputObjectsDelegate
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
+    
     
     NSString *stringValue;
     
@@ -155,13 +167,24 @@
         AVMetadataMachineReadableCodeObject * metadataObject = [metadataObjects objectAtIndex:0];
         stringValue = metadataObject.stringValue;
     }
-    [_session stopRunning];
     
-    [self dismissViewControllerAnimated:YES completion:^
-     {
-         [timer invalidate];
-         NSLog(@"%@",stringValue);
-       }];
+    [_session stopRunning];
+    [timer invalidate];
+    
+    
+    NSArray* results = [[FRModel sharedFRModel] searchDirectoryByFileName:stringValue];
+    
+    if (results.count > 1) {
+        
+        FRSearchResultViewController *searchResult = [FRSearchResultViewController new];
+        [self.navigationController pushViewController:searchResult animated:YES];
+        
+    }else{
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.scanFinishBlock(stringValue);
+         }];
+    }
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
@@ -190,8 +213,5 @@
         case UIInterfaceOrientationUnknown:
             break;
     }
-    
 }
-
-
 @end

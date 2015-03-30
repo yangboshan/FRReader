@@ -17,6 +17,7 @@
 		3E04E0C71AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0C11AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m */; };
 		3E3EE4BC1AC8419A00683F18 /* FRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3EE4BB1AC8419A00683F18 /* FRScanViewController.m */; };
 		3E3EE4BF1AC841B600683F18 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E3EE4BE1AC841B600683F18 /* AVFoundation.framework */; };
+		3E5BB8921AC8DEAE00F822A4 /* FRSearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5BB8911AC8DEAE00F822A4 /* FRSearchResultViewController.m */; };
 		3E5E68C41AC63901009C78B5 /* Lantinghei_0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E68C31AC63901009C78B5 /* Lantinghei_0.ttf */; };
 		3E5E68C71AC6398A009C78B5 /* UIImage+FRCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68C61AC6398A009C78B5 /* UIImage+FRCategory.m */; };
 		3E5E68D01AC6549C009C78B5 /* FRSettingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68CF1AC6549C009C78B5 /* FRSettingManager.m */; };
@@ -67,6 +68,8 @@
 		3E3EE4BA1AC8419A00683F18 /* FRScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRScanViewController.h; sourceTree = "<group>"; };
 		3E3EE4BB1AC8419A00683F18 /* FRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRScanViewController.m; sourceTree = "<group>"; };
 		3E3EE4BE1AC841B600683F18 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		3E5BB8901AC8DEAE00F822A4 /* FRSearchResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRSearchResultViewController.h; sourceTree = "<group>"; };
+		3E5BB8911AC8DEAE00F822A4 /* FRSearchResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRSearchResultViewController.m; sourceTree = "<group>"; };
 		3E5E68C31AC63901009C78B5 /* Lantinghei_0.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lantinghei_0.ttf; sourceTree = "<group>"; };
 		3E5E68C51AC6398A009C78B5 /* UIImage+FRCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FRCategory.h"; sourceTree = "<group>"; };
 		3E5E68C61AC6398A009C78B5 /* UIImage+FRCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FRCategory.m"; sourceTree = "<group>"; };
@@ -162,6 +165,22 @@
 				3E04E0C41AC5AC490022F7F0 /* PureLayoutDefines.h */,
 			);
 			name = Purelayout;
+			sourceTree = "<group>";
+		};
+		3E5BB88E1AC8DE1E00F822A4 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Setting;
+			sourceTree = "<group>";
+		};
+		3E5BB88F1AC8DE2700F822A4 /* SearchResult */ = {
+			isa = PBXGroup;
+			children = (
+				3E5BB8901AC8DEAE00F822A4 /* FRSearchResultViewController.h */,
+				3E5BB8911AC8DEAE00F822A4 /* FRSearchResultViewController.m */,
+			);
+			name = SearchResult;
 			sourceTree = "<group>";
 		};
 		3E9FF1B31AC6D128009E96B9 /* TableViewCell */ = {
@@ -272,6 +291,8 @@
 		3EC6CD691AC53DBC005AB8BB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				3E5BB88F1AC8DE2700F822A4 /* SearchResult */,
+				3E5BB88E1AC8DE1E00F822A4 /* Setting */,
 				3E3EE4BD1AC8419D00683F18 /* Scan */,
 				3EC6CD6E1AC53E22005AB8BB /* LeftTree */,
 				3EC6CD6F1AC53E2A005AB8BB /* RightReading */,
@@ -443,6 +464,7 @@
 				3E04E0AA1AC586A60022F7F0 /* NSString+FRCategory.m in Sources */,
 				3E04E0B31AC588980022F7F0 /* FRNodeModel.m in Sources */,
 				3EC6CD441AC53B87005AB8BB /* AppDelegate.m in Sources */,
+				3E5BB8921AC8DEAE00F822A4 /* FRSearchResultViewController.m in Sources */,
 				3EC6CD471AC53B87005AB8BB /* MasterViewController.m in Sources */,
 				3E04E0C71AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m in Sources */,
 				3E04E0C51AC5AC490022F7F0 /* ALView+PureLayout.m in Sources */,
