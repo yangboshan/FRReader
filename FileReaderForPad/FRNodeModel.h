@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FRModel.h"
 
 
 typedef NS_ENUM(NSInteger, kFRNodeType){

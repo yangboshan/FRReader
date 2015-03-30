@@ -8,11 +8,15 @@
 
 #import "FRModel.h"
 #import "FRNodeModel.h"
+#import "NSString+FRCategory.h"
 
 @interface FRModel()
 
 @property(nonatomic,strong) NSArray* docTypeFilter;
 @property(nonatomic,strong) NSArray* pdfTypeFilter;
+
+@property(nonatomic,strong) NSString* searchKey;
+@property(nonatomic,strong) NSMutableArray* searchList;
 
 @end
 
@@ -35,14 +39,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(FRModel)
     return _pdfTypeFilter;
 }
 
-
-+(NSString*)documentPath{
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory=[paths objectAtIndex:0];
-    NSLog(@"NSDocumentDirectory:%@",documentsDirectory);
-    return documentsDirectory;
-}
 
 -(BOOL)createFolderByPath:(NSString*)folderPath{
     
@@ -80,44 +76,62 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(FRModel)
     }
 }
 
-
--(NSMutableArray*)getFileTreeByPath:(NSString*)path level:(NSInteger)level{
+-(NSMutableArray*)getFileTreeByNodeModel:(FRNodeModel*)requestNodeModel{
+    
+    BOOL isRootNode;
+    
+    //如果是从根开始请求构建一个临时Node
+    if (!requestNodeModel) {
         
+        isRootNode = YES;
+        requestNodeModel = [[FRNodeModel alloc] initWithName:nil path:[NSString documentPath] level:0 type:0];
+    }
+    
     NSMutableArray* nodeList = [NSMutableArray array];
-    NSArray* fileList = [self getNodeListByPath:path];
+    NSArray* fileList = [self getNodeListByPath:requestNodeModel.nodePath];
     
     [fileList enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         BOOL isDirectory;
         
-        NSInteger nodeLevel = level; ++nodeLevel;
-        NSString* nodePath = [path stringByAppendingPathComponent:fileList[idx]];
+        NSInteger nodeLevel = requestNodeModel.nodeLevel; ++nodeLevel;
         kFRNodeType nodeType = kFRNodeTypeUnknown;
         
-        if ([[NSFileManager defaultManager] fileExistsAtPath:nodePath isDirectory:&isDirectory]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:fileList[idx] isDirectory:&isDirectory]) {
             
             if (isDirectory) {
                 nodeType = kFRNodeTypeFolder;
             }
             
-            if ([self.docTypeFilter containsObject:[nodePath pathExtension]]) {
+            if ([self.docTypeFilter containsObject:[fileList[idx] pathExtension]]) {
                 nodeType = kFRNodeTypeDocFile;
             }
             
-            if ([self.pdfTypeFilter containsObject:[nodePath pathExtension]]) {
+            if ([self.pdfTypeFilter containsObject:[fileList[idx] pathExtension]]) {
                 nodeType = kFRNodeTypePDFFile;
             }
         }
         
         if (nodeType!=kFRNodeTypeUnknown) {
             
-            FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:fileList[idx] path:nodePath level:nodeLevel type:nodeType];
+            FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:[fileList[idx] lastPathComponent] path:nil level:nodeLevel type:nodeType];
             [nodeList addObject:nodeModel];
+            
+            //为节点的父节点赋值
+            if (!isRootNode) {
+                nodeModel.parent = requestNodeModel;
+            }
         }
     }];
     
+    //为请求节点的子节点集合赋值
+    if (!isRootNode) {
+        requestNodeModel.children = nodeList;
+    }
+    
     return nodeList;
 }
+
 
 -(NSArray*)getNodeListByPath:(NSString*)path{
     
@@ -125,8 +139,51 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(FRModel)
     NSError *error = nil;
     
     NSArray *fileList = [fileManager contentsOfDirectoryAtPath:path error:&error];
-    return fileList;
+    NSMutableArray* pathList = [NSMutableArray array];
+    for(NSString* file in fileList){
+        [pathList addObject:[path stringByAppendingPathComponent:file]];
+    }
+    
+    return pathList;
+}
+
+//递归查找文件
+-(NSArray*)searchDirectoryByFileName:(NSString*)file{
+    
+    self.searchKey = file;
+    self.searchList = nil;
+    self.searchList = [NSMutableArray array];
+    
+    [self searchByPath:[NSString documentPath]];
+    
+    return self.searchList;
 }
 
 
+-(void)searchByPath:(NSString*)path{
+    
+    NSArray* list = [self getNodeListByPath:path];
+    
+    for(NSString* path in list){
+        
+        if ([self isDirectiory:path]) {
+            [self searchByPath:path];
+            
+        }else{
+            
+            if ([[path lastPathComponent] containsString:self.searchKey]) {
+                [self.searchList addObject:path];
+            }
+        }
+    }
+}
+
+
+-(BOOL)isDirectiory:(NSString*)path{
+    
+    BOOL isDirectory;
+    [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+    
+    return isDirectory;
+}
 @end

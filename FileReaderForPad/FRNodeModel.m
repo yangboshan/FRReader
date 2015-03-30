@@ -7,6 +7,9 @@
 //
 
 #import "FRNodeModel.h"
+#import "FRModel.h"
+#import "NSString+FRCategory.h"
+
 
 @implementation FRNodeModel
 
@@ -34,13 +37,23 @@
     return NO;
 }
 
-//节点路径
+//根据树结构 动态获取节点路径
 -(NSString*)nodePath{
     
-    if (!self.parent) {
-        return [[FRModel documentPath] stringByAppendingString:self.nodeName];
+    if (self.nodeLevel == 0) {
+        
+        return [NSString documentPath];
+        
     } else{
-        return [self.parent.nodePath stringByAppendingPathComponent:self.nodeName];
+        
+        if (self.parent) {
+                    
+            return [self.parent.nodePath stringByAppendingPathComponent:self.nodeName];
+            
+        }else{
+            
+            return [[NSString documentPath] stringByAppendingPathComponent:self.nodeName];
+        }
     }
 }
 

@@ -12,5 +12,6 @@
 
 -(BOOL)stringIsNilOrEmpty;
 
++(NSString*)documentPath;
 
 @end

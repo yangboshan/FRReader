@@ -17,7 +17,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="pPr-A0-nWV"/>
                         <barButtonItem style="plain" id="tuV-TM-Fvq">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eHL-b2-lhQ">
-                                <rect key="frame" x="40" y="22" width="77" height="22"/>
+                                <rect key="frame" x="6" y="11" width="150" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="扫描" image="camara_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -27,7 +27,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="uVG-1f-sGN"/>
                         <barButtonItem style="plain" id="aW4-uh-TPH">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0SS-jp-DEC">
-                                <rect key="frame" x="137" y="22" width="82" height="27"/>
+                                <rect key="frame" x="122" y="8.5" width="150" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="搜索" image="search_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -37,7 +37,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="jFK-Rv-EMM"/>
                         <barButtonItem style="plain" id="KcQ-aY-SFZ">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="swV-hA-GPr">
-                                <rect key="frame" x="242" y="22" width="77" height="22"/>
+                                <rect key="frame" x="200" y="11" width="150" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="设置" image="setting_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>

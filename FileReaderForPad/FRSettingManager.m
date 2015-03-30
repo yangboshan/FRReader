@@ -7,7 +7,7 @@
 //
 
 #import "FRSettingManager.h"
-#import "FRModel.h"
+#import "NSString+FRCategory.h"
 
 
 static NSString *SETTING_FIRST_TIME_RUN = @"SETTING_FIRST_TIME_RUN";
@@ -40,7 +40,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(FRSettingManager)
 
 -(void)buildFolders{
     [self.folderList enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[[FRModel documentPath] stringByAppendingPathComponent:obj] withIntermediateDirectories:NO attributes:nil error:nil];
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[NSString documentPath] stringByAppendingPathComponent:obj] withIntermediateDirectories:NO attributes:nil error:nil];
     }];
 }
 

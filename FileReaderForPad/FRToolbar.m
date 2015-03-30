@@ -17,18 +17,18 @@
 -(void)awakeFromNib{
     
     [self.scanBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [self.scanBtn.titleLabel setFont:Lantinghei(14.0)];
+    [self.scanBtn.titleLabel setFont:Lantinghei(18.0)];
     [self.scanBtn setImageEdgeInsets:UIEdgeInsetsMake(-1, -5, 0, 0)];
     [self.scanBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -10)];
     
     
     [self.searchBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [self.searchBtn.titleLabel setFont:Lantinghei(14.0)];
+    [self.searchBtn.titleLabel setFont:Lantinghei(18.0)];
     [self.searchBtn setImageEdgeInsets:UIEdgeInsetsMake(-1, -5, 0, 0)];
     [self.searchBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -10)];
     
     [self.settingBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [self.settingBtn.titleLabel setFont:Lantinghei(14.0)];
+    [self.settingBtn.titleLabel setFont:Lantinghei(18.0)];
     [self.settingBtn setImageEdgeInsets:UIEdgeInsetsMake(-1, -5, 0, 0)];
     [self.settingBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -10)];
     

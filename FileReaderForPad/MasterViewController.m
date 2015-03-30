@@ -17,6 +17,7 @@
 #import "PureLayout.h"
 #import "AppDelegate.h"
 #import "NSString+FRCategory.h"
+#import "FRScanViewController.h"
 
 typedef NS_ENUM(NSInteger, kFRAlertViweTag){
     kFRAlertViweTagCreateFolder = 1000,
@@ -58,13 +59,12 @@ static NSString* cellId = @"cellId";
     [self.addButton setEnabled:NO];
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    
     [self initialSetup];
 }
 
 -(void)initialSetup{
     
-    self.objects = [[FRModel sharedFRModel] getFileTreeByPath:[FRModel documentPath] level:0];
+    self.objects = [[FRModel sharedFRModel] getFileTreeByNodeModel:nil];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -81,9 +81,38 @@ static NSString* cellId = @"cellId";
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Methods
 
-//新建文件夹
+#pragma mark - alertView delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex == 1) {
+        
+        switch (alertView.tag) {
+                
+            case kFRAlertViweTagCreateFolder:
+                
+                [self addFolderByName:[[alertView textFieldAtIndex:0] text]];
+                
+                break;
+            case kFRAlertViweTagDeleteItem:
+                
+                [self delete];
+                
+                break;
+                
+            case kFRAlertViweTagRenameItem:
+                [self renameByName:[[alertView textFieldAtIndex:0] text]];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+
+
+#pragma mark - 新建文件夹
 - (void)createFolder:(id)sender {
     
     //获取当前选择的节点
@@ -104,32 +133,47 @@ static NSString* cellId = @"cellId";
     
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+-(void)addFolderByName:(NSString*)name{
     
-    if (buttonIndex == 1) {
+    //文件夹名称为空返回
+    if ([name stringIsNilOrEmpty]) {
+        return;
+    }
+    
+    NSString* folderPath = [self.selectedModel.nodePath stringByAppendingPathComponent:name];
+    NSLog(@"%@",folderPath);
+    
+    //新建文件夹
+    BOOL isSuccess = [[FRModel sharedFRModel] createFolderByPath:folderPath];
+    
+    //失败了 提示
+    if (!isSuccess) {
         
-        switch (alertView.tag) {
-                
-            case kFRAlertViweTagCreateFolder:
-                
-                [self addFolderByName:[[alertView textFieldAtIndex:0] text]];
-
-                break;
-            case kFRAlertViweTagDeleteItem:
-                
-                [self delete];
-
-                break;
-                
-            case kFRAlertViweTagRenameItem:
-                [self renameByName:[[alertView textFieldAtIndex:0] text]];
-                break;
-            default:
-                break;
-        }
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"新建文件夹失败"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil, nil];
+        [alertView show];
+        
+        //新建成功
+    }else{
+        
+        //构建新的节点 并添加到列表中
+        NSInteger level = self.selectedModel.nodeLevel; ++ level;
+        
+        FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:name path:nil level:level type:kFRNodeTypeFolder];
+        [self.selectedModel.children addObject:nodeModel];
+        nodeModel.parent = self.selectedModel;
+        
+        NSInteger index = self.selectedIndexPath.row + 1;
+        NSArray* folderArray = @[[NSIndexPath indexPathForRow:index inSection:0]];
+        [self.objects insertObject:nodeModel atIndex:index++];
+        [self.tableView insertRowsAtIndexPaths:folderArray withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
+#pragma mark - 重命名
 -(void)renameByName:(NSString*)name{
     
     NSString* path1= self.renameModel.nodePath;
@@ -148,16 +192,11 @@ static NSString* cellId = @"cellId";
     }else{
         
         self.renameModel.nodeName = name;
-        self.renameModel.nodePath = path2;
-        
-        //清空所有子节点 或者可以修改所有自节点的路径
-        [self.renameModel.children removeAllObjects];
-        
         [self.tableView reloadData];
     }
 }
 
-
+#pragma mark - 删除
 -(void)delete{
     
     FRNodeModel* currentModel = self.objects[self.editIndexPath.row];
@@ -192,43 +231,7 @@ static NSString* cellId = @"cellId";
     }
 }
 
--(void)addFolderByName:(NSString*)name{
-    
-    //文件夹名称为空返回
-    if ([name stringIsNilOrEmpty]) {
-        return;
-    }
-    
-    NSString* folderPath = [self.selectedModel.nodePath stringByAppendingPathComponent:name];
-    NSLog(@"%@",folderPath);
-    
-    //新建文件夹
-    BOOL isSuccess = [[FRModel sharedFRModel] createFolderByPath:folderPath];
-    
-    //失败了 提示
-    if (!isSuccess) {
-        
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                            message:@"新建文件夹失败"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
-    
-    //新建成功
-    }else{
-        
-        //构建新的节点 并添加到列表中
-        NSInteger level = self.selectedModel.nodeLevel; ++ level;
-        
-        FRNodeModel* nodeModel = [[FRNodeModel alloc] initWithName:name path:folderPath level:level type:kFRNodeTypeFolder];
-        [self.selectedModel.children addObject:nodeModel];
-        NSInteger index = self.selectedIndexPath.row + 1;
-        NSArray* folderArray = @[[NSIndexPath indexPathForRow:index inSection:0]];
-        [self.objects insertObject:nodeModel atIndex:index++];
-        [self.tableView insertRowsAtIndexPaths:folderArray withRowAnimation:UITableViewRowAnimationFade];
-    }
-}
+
 
 #pragma mark - Segues
 
@@ -269,7 +272,7 @@ static NSString* cellId = @"cellId";
     FRNodeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId forIndexPath:indexPath];
     
     UILongPressGestureRecognizer* longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-    longPress.minimumPressDuration = 2.0;
+    longPress.minimumPressDuration = 1.0;
     [cell addGestureRecognizer:longPress];
     
 
@@ -280,6 +283,7 @@ static NSString* cellId = @"cellId";
     return cell;
 }
 
+//处理长按
 -(void)handleLongPress:(UIGestureRecognizer*)gesture{
     
     if (gesture.state == UIGestureRecognizerStateEnded) {
@@ -324,17 +328,8 @@ static NSString* cellId = @"cellId";
     }else{
         
         //获取节点下的列表
-        NSMutableArray* children = [[FRModel sharedFRModel] getFileTreeByPath:currentNode.nodePath level:currentNode.nodeLevel];
+        NSMutableArray* children = currentNode.children ? currentNode.children : [[FRModel sharedFRModel] getFileTreeByNodeModel:currentNode];
         
-        [children enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            FRNodeModel* child = obj;
-            child.parent = currentNode;
-        }];
-        
-        //如果已有子节点集合则使用
-        if (currentNode.children) {
-            children = currentNode.children;
-        }
         
         //判断是否已经展开
         if (self.objects.count-1 > indexPath.row) {
@@ -349,20 +344,16 @@ static NSString* cellId = @"cellId";
             }
         }
         
-        
         //展开
         if (!isExpanded) {
             
             index = indexPath.row + 1;
             NSMutableArray* addList = [NSMutableArray array];
-            currentNode.children = children;
-            
             for(FRNodeModel* nodeModel in children){
                 
                 [addList addObject:[NSIndexPath indexPathForRow:index inSection:0]];
                 [self.objects insertObject:nodeModel atIndex:index++];
             }
-            
             [tableView insertRowsAtIndexPaths:addList withRowAnimation:UITableViewRowAnimationFade];
         
         //收起
@@ -419,11 +410,29 @@ static NSString* cellId = @"cellId";
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {}
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return  @"删除";
+}
+
 
 -(FRToolbar*)toolbar{
     if (!_toolbar) {
         _toolbar = [[[NSBundle mainBundle] loadNibNamed:@"FRToolbar" owner:self options:nil] lastObject];
+        [_toolbar.scanBtn addTarget:self action:@selector(showCamera) forControlEvents:UIControlEventTouchUpInside];
     }
     return _toolbar;
 }
+
+-(void)showCamera{
+    
+    FRScanViewController *scan = [FRScanViewController new];
+    UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:scan];
+    nav.view.autoresizingMask = UIViewAutoresizingNone;
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:nav animated:YES completion:nil];
+    nav.view.frame = CGRectMake(0, 0, 600, 600);
+    nav.view.center = self.view.center;
+}
+
 @end

@@ -15,6 +15,8 @@
 		3E04E0C51AC5AC490022F7F0 /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0BD1AC5AC490022F7F0 /* ALView+PureLayout.m */; };
 		3E04E0C61AC5AC490022F7F0 /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0BF1AC5AC490022F7F0 /* NSArray+PureLayout.m */; };
 		3E04E0C71AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E0C11AC5AC490022F7F0 /* NSLayoutConstraint+PureLayout.m */; };
+		3E3EE4BC1AC8419A00683F18 /* FRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3EE4BB1AC8419A00683F18 /* FRScanViewController.m */; };
+		3E3EE4BF1AC841B600683F18 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E3EE4BE1AC841B600683F18 /* AVFoundation.framework */; };
 		3E5E68C41AC63901009C78B5 /* Lantinghei_0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E68C31AC63901009C78B5 /* Lantinghei_0.ttf */; };
 		3E5E68C71AC6398A009C78B5 /* UIImage+FRCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68C61AC6398A009C78B5 /* UIImage+FRCategory.m */; };
 		3E5E68D01AC6549C009C78B5 /* FRSettingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E68CF1AC6549C009C78B5 /* FRSettingManager.m */; };
@@ -62,7 +64,9 @@
 		3E04E0C21AC5AC490022F7F0 /* PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayout.h; sourceTree = "<group>"; };
 		3E04E0C31AC5AC490022F7F0 /* PureLayout+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PureLayout+Internal.h"; sourceTree = "<group>"; };
 		3E04E0C41AC5AC490022F7F0 /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayoutDefines.h; sourceTree = "<group>"; };
-		3E04E0C91AC5AD570022F7F0 /* FRHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRHelper.h; sourceTree = "<group>"; };
+		3E3EE4BA1AC8419A00683F18 /* FRScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRScanViewController.h; sourceTree = "<group>"; };
+		3E3EE4BB1AC8419A00683F18 /* FRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRScanViewController.m; sourceTree = "<group>"; };
+		3E3EE4BE1AC841B600683F18 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3E5E68C31AC63901009C78B5 /* Lantinghei_0.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lantinghei_0.ttf; sourceTree = "<group>"; };
 		3E5E68C51AC6398A009C78B5 /* UIImage+FRCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FRCategory.h"; sourceTree = "<group>"; };
 		3E5E68C61AC6398A009C78B5 /* UIImage+FRCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FRCategory.m"; sourceTree = "<group>"; };
@@ -94,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E3EE4BF1AC841B600683F18 /* AVFoundation.framework in Frameworks */,
 				3E5E68DE1AC68639009C78B5 /* QuickLook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,6 +139,15 @@
 			name = ThirdParty;
 			sourceTree = "<group>";
 		};
+		3E3EE4BD1AC8419D00683F18 /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				3E3EE4BA1AC8419A00683F18 /* FRScanViewController.h */,
+				3E3EE4BB1AC8419A00683F18 /* FRScanViewController.m */,
+			);
+			name = Scan;
+			sourceTree = "<group>";
+		};
 		3E5748BE1AC6A85A0050CEA2 /* Purelayout */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,24 +164,24 @@
 			name = Purelayout;
 			sourceTree = "<group>";
 		};
-		3E9FF1B31AC6D128009E96B9 /* Cell */ = {
+		3E9FF1B31AC6D128009E96B9 /* TableViewCell */ = {
 			isa = PBXGroup;
 			children = (
 				3E04E0B61AC599CF0022F7F0 /* FRNodeTableViewCell.h */,
 				3E04E0B71AC599CF0022F7F0 /* FRNodeTableViewCell.m */,
 				3E04E0B81AC599CF0022F7F0 /* FRNodeTableViewCell.xib */,
 			);
-			name = Cell;
+			name = TableViewCell;
 			sourceTree = "<group>";
 		};
-		3E9FF1B41AC6D134009E96B9 /* Toolbar */ = {
+		3E9FF1B41AC6D134009E96B9 /* BottomToolbar */ = {
 			isa = PBXGroup;
 			children = (
 				3E9FF1B51AC6D18B009E96B9 /* FRToolbar.h */,
 				3E9FF1B61AC6D18B009E96B9 /* FRToolbar.m */,
 				3E9FF1B81AC6D1A8009E96B9 /* FRToolbar.xib */,
 			);
-			name = Toolbar;
+			name = BottomToolbar;
 			sourceTree = "<group>";
 		};
 		3EC6CD321AC53B86005AB8BB = {
@@ -208,6 +222,7 @@
 		3EC6CD3E1AC53B86005AB8BB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3E3EE4BE1AC841B600683F18 /* AVFoundation.framework */,
 				3E5E68DD1AC68639009C78B5 /* QuickLook.framework */,
 				3EC6CD3F1AC53B87005AB8BB /* Info.plist */,
 				3EC6CD401AC53B87005AB8BB /* main.m */,
@@ -235,7 +250,6 @@
 		3EC6CD671AC53DB0005AB8BB /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3E04E0C91AC5AD570022F7F0 /* FRHelper.h */,
 				3E04E0AB1AC587310022F7F0 /* FRModel.h */,
 				3E04E0AC1AC587310022F7F0 /* FRModel.m */,
 				3E04E0B51AC589350022F7F0 /* Entity */,
@@ -249,8 +263,8 @@
 		3EC6CD681AC53DB7005AB8BB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3E9FF1B41AC6D134009E96B9 /* Toolbar */,
-				3E9FF1B31AC6D128009E96B9 /* Cell */,
+				3E9FF1B41AC6D134009E96B9 /* BottomToolbar */,
+				3E9FF1B31AC6D128009E96B9 /* TableViewCell */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -258,8 +272,9 @@
 		3EC6CD691AC53DBC005AB8BB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				3EC6CD6E1AC53E22005AB8BB /* Master */,
-				3EC6CD6F1AC53E2A005AB8BB /* Detail */,
+				3E3EE4BD1AC8419D00683F18 /* Scan */,
+				3EC6CD6E1AC53E22005AB8BB /* LeftTree */,
+				3EC6CD6F1AC53E2A005AB8BB /* RightReading */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -292,22 +307,22 @@
 			name = Category;
 			sourceTree = "<group>";
 		};
-		3EC6CD6E1AC53E22005AB8BB /* Master */ = {
+		3EC6CD6E1AC53E22005AB8BB /* LeftTree */ = {
 			isa = PBXGroup;
 			children = (
 				3EC6CD451AC53B87005AB8BB /* MasterViewController.h */,
 				3EC6CD461AC53B87005AB8BB /* MasterViewController.m */,
 			);
-			name = Master;
+			name = LeftTree;
 			sourceTree = "<group>";
 		};
-		3EC6CD6F1AC53E2A005AB8BB /* Detail */ = {
+		3EC6CD6F1AC53E2A005AB8BB /* RightReading */ = {
 			isa = PBXGroup;
 			children = (
 				3EC6CD481AC53B87005AB8BB /* DetailViewController.h */,
 				3EC6CD491AC53B87005AB8BB /* DetailViewController.m */,
 			);
-			name = Detail;
+			name = RightReading;
 			sourceTree = "<group>";
 		};
 		3EC6CD701AC53E45005AB8BB /* SettingManager */ = {
@@ -437,6 +452,7 @@
 				3E04E0C61AC5AC490022F7F0 /* NSArray+PureLayout.m in Sources */,
 				3E04E0AD1AC587310022F7F0 /* FRModel.m in Sources */,
 				3E9FF1B71AC6D18B009E96B9 /* FRToolbar.m in Sources */,
+				3E3EE4BC1AC8419A00683F18 /* FRScanViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,19 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "FRGCDSingleton.h"
 
+@class FRNodeModel;
 
 @interface FRModel : NSObject
 
 +(FRModel*)sharedFRModel;
 
-+(NSString*)documentPath;
-
--(NSMutableArray*)getFileTreeByPath:(NSString*)path level:(NSInteger)level;
+-(NSMutableArray*)getFileTreeByNodeModel:(FRNodeModel*)nodeModel;
 
 -(BOOL)createFolderByPath:(NSString*)folderPath;
 
 -(BOOL)deleteByPath:(NSString*)path;
 
 -(BOOL)renameByPath1:(NSString*)path1 path2:(NSString*)path2 ;
+
+-(NSArray*)searchDirectoryByFileName:(NSString*)file;
 
 @end
