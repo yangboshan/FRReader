@@ -171,19 +171,26 @@
     [_session stopRunning];
     [timer invalidate];
     
-    
+    stringValue = @"核心动画编程指南1.pdf";
     NSArray* results = [[FRModel sharedFRModel] searchDirectoryByFileName:stringValue];
     
-    if (results.count > 1) {
-        
-        FRSearchResultViewController *searchResult = [FRSearchResultViewController new];
-        [self.navigationController pushViewController:searchResult animated:YES];
-        
+    if (results.count) {
+        if (results.count>1) {
+            FRSearchResultViewController *searchResult = [[FRSearchResultViewController alloc] initWithData:results block:^(NSString *file) {
+                [self dismissViewControllerAnimated:YES completion:^{
+                    self.scanFinishBlock(file,kFRScanResultFlagNormal);
+                }];
+            }];
+            [self.navigationController pushViewController:searchResult animated:NO];
+        }else{
+            [self dismissViewControllerAnimated:YES completion:^{
+                self.scanFinishBlock(results[0],kFRScanResultFlagNormal);
+            }];
+        }
     }else{
-        
         [self dismissViewControllerAnimated:YES completion:^{
-            self.scanFinishBlock(stringValue);
-         }];
+            self.scanFinishBlock(stringValue,kFRScanResultFlagNone);
+        }];
     }
 }
 

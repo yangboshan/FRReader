@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^UserDidSelectFile)(NSString* file);
+
 @interface FRSearchResultViewController : UIViewController
 
--(instancetype)initWithData:(NSArray*)data;
+-(instancetype)initWithData:(NSArray*)data block:(UserDidSelectFile)block;
 @end

@@ -282,11 +282,13 @@ static NSString* cellId = @"cellId";
     
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         
-        id object;
+        FRNodeModel* object;
         
         if (self.fromTableView) {
             NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
             object = self.objects[indexPath.row];
+            
+            NSLog(@"%@",object.nodePath);
         }else{
             object = self.searchResultModel;
         }
@@ -474,12 +476,19 @@ static NSString* cellId = @"cellId";
 
 -(void)showCamera{
     
-    FRScanViewController *scan = [[FRScanViewController alloc] initWithFinishBlock:^(NSString *file) {
+    FRScanViewController *scan = [[FRScanViewController alloc] initWithFinishBlock:^(NSString *file,kFRScanResultFlag flag) {
         
-        self.fromTableView = NO;
-        self.searchResultModel = [[FRNodeModel alloc] initWithName:[file lastPathComponent] path:file level:0 type:0];
-        [self performSegueWithIdentifier:@"showDetail" sender:nil];
-        
+        if (flag == kFRScanResultFlagNone) {
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:@"没有检索到<%@>相关的文档",file] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil,nil];
+            [alertView show];
+            
+        }else{
+            
+            self.fromTableView = NO;
+            self.searchResultModel = [[FRNodeModel alloc] initWithName:file path:file level:-1 type:0];
+            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
+            [self performSegueWithIdentifier:@"showDetail" sender:nil];
+        }
     }];
     
     UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:scan];

@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-
+typedef NS_ENUM(NSInteger, kFRScanResultFlag){
+    kFRScanResultFlagNormal,
+    kFRScanResultFlagNone,
+};
 
 @interface FRScanViewController : UIViewController<AVCaptureMetadataOutputObjectsDelegate>
 {
@@ -18,7 +21,7 @@
     NSTimer * timer;
 }
 
-typedef void(^SendSearchResult)(NSString* file);
+typedef void(^SendSearchResult)(NSString* file,kFRScanResultFlag flag);
 
 @property (strong,nonatomic)AVCaptureDevice * device;
 @property (strong,nonatomic)AVCaptureDeviceInput * input;

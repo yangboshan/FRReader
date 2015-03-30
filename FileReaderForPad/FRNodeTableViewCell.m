@@ -47,6 +47,11 @@
             [self.nameLabel setTextColor:[UIColor grayColor]];
             [self.iconImageView setImage:[UIImage imageNamed:@"pdf_icon"]];
             break;
+        case kFRNodeTypeDocument:
+            [self.nameLabel setFont:Lantinghei(15)];
+            [self.nameLabel setTextColor:[UIColor grayColor]];
+            [self.iconImageView setImage:[UIImage imageNamed:@"file_icon"]];
+            break;
         default:
             break;
     }

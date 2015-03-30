@@ -46,7 +46,6 @@
             self.previewController = nil;
         }
         
-        self.navigationItem.title = [self.detailItem valueForKey:@"nodeName"];
         self.previewController = [QLPreviewController new];
         self.previewController.delegate = self;
         self.previewController.dataSource = self;
@@ -71,7 +70,12 @@
 
 - (id)previewController:(QLPreviewController *)previewController previewItemAtIndex:(NSInteger)idx{
  
-    return [NSURL fileURLWithPath:[self.detailItem valueForKey:@"nodePath"]];
+    NSInteger level = [[self.detailItem valueForKey:@"nodeLevel"] integerValue];
+    if (level>=0) {
+        return [NSURL fileURLWithPath:[self.detailItem valueForKey:@"nodePath"]];
+    }else{
+        return [NSURL fileURLWithPath:[self.detailItem valueForKey:@"nodeName"]];
+    }
 }
 
 @end
