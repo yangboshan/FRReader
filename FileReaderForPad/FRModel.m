@@ -129,6 +129,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(FRModel)
         requestNodeModel.children = nodeList;
     }
     
+    NSLog(@"请求Tree 节点数%lu",(unsigned long)nodeList.count);
+    
+    nodeList = [[nodeList sortedArrayUsingComparator:^NSComparisonResult(FRNodeModel *obj1, FRNodeModel *obj2) {
+        return obj1.nodeType >  obj2.nodeType;
+    }] mutableCopy];
+    
     return nodeList;
 }
 

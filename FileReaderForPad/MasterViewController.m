@@ -380,22 +380,36 @@ static NSString* cellId = @"cellId";
         //获取节点下的列表
         NSMutableArray* children = currentNode.children ? currentNode.children : [[FRModel sharedFRModel] getFileTreeByNodeModel:currentNode];
         
+        NSLog(@"获取子节点  数量:%lu",(unsigned long)children.count);
         
-        //判断是否已经展开
-        if (self.objects.count-1 > indexPath.row) {
-            
+        if (self.objects.count - 1 > indexPath.row) {
             FRNodeModel* nextNode = self.objects[++index];
-            
-            for(FRNodeModel* nodeModel in children){
-                if ([nodeModel isEqual:nextNode]) {
-                    isAlreadyExpanded = YES;
-                    break;
-                }
+            if (nextNode.nodeLevel > currentNode.nodeLevel) {
+                isAlreadyExpanded = YES;
+            }else{
+                isAlreadyExpanded = NO;
             }
         }
         
+        
+//        //判断是否已经展开
+//        if (self.objects.count-1 > indexPath.row) {
+//            
+//            FRNodeModel* nextNode = self.objects[++index];
+//            
+//            for(FRNodeModel* nodeModel in children){
+//                if ([nodeModel isEqual:nextNode]) {
+//                    isAlreadyExpanded = YES;
+//                    break;
+//                }
+//            }
+//        }
+        
+        
         //展开
         if (!isAlreadyExpanded) {
+            
+            NSLog(@"展开");
             
             index = indexPath.row + 1;
             NSMutableArray* addList = [NSMutableArray array];
@@ -408,6 +422,8 @@ static NSString* cellId = @"cellId";
         
         //收起
         }else{
+            NSLog(@"收起");
+
             
             [self shrinkThisRows:children];
         }
