@@ -391,21 +391,6 @@ static NSString* cellId = @"cellId";
             }
         }
         
-        
-//        //判断是否已经展开
-//        if (self.objects.count-1 > indexPath.row) {
-//            
-//            FRNodeModel* nextNode = self.objects[++index];
-//            
-//            for(FRNodeModel* nodeModel in children){
-//                if ([nodeModel isEqual:nextNode]) {
-//                    isAlreadyExpanded = YES;
-//                    break;
-//                }
-//            }
-//        }
-        
-        
         //展开
         if (!isAlreadyExpanded) {
             
@@ -481,7 +466,7 @@ static NSString* cellId = @"cellId";
     return  @"删除";
 }
 
-
+#pragma mark - getter
 -(FRToolbar*)toolbar{
     if (!_toolbar) {
         _toolbar = [[[NSBundle mainBundle] loadNibNamed:@"FRToolbar" owner:self options:nil] lastObject];
@@ -489,6 +474,7 @@ static NSString* cellId = @"cellId";
     }
     return _toolbar;
 }
+
 
 -(void)showCamera{
     

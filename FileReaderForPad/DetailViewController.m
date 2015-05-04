@@ -8,10 +8,13 @@
 
 #import "DetailViewController.h"
 #import "PureLayout.h"
+#import "FRMacro.h"
 
 @interface DetailViewController ()
 
 @property(nonatomic,strong) QLPreviewController* previewController;
+@property(nonatomic,strong) UILabel* titleView;
+
 @end
 
 @implementation DetailViewController
@@ -69,6 +72,11 @@
 }
 
 - (id)previewController:(QLPreviewController *)previewController previewItemAtIndex:(NSInteger)idx{
+    
+    self.titleView.text = [self.detailItem valueForKey:@"nodeName"];
+    [self.titleView sizeToFit];
+    self.navigationItem.titleView = self.titleView;
+    
  
     NSInteger level = [[self.detailItem valueForKey:@"nodeLevel"] integerValue];
     if (level>=0) {
@@ -78,4 +86,14 @@
     }
 }
 
+#pragma mark -
+-(UILabel*)titleView{
+    if (!_titleView) {
+        _titleView = [[UILabel alloc] init];
+        [_titleView setTextColor:[UIColor whiteColor]];
+        [_titleView setFont:Lantinghei(22.0)];
+        [_titleView setTextAlignment:NSTextAlignmentCenter];
+    }
+    return _titleView;
+}
 @end
