@@ -73,7 +73,9 @@
 
 - (id)previewController:(QLPreviewController *)previewController previewItemAtIndex:(NSInteger)idx{
     
-    self.titleView.text = [self.detailItem valueForKey:@"nodeName"];
+    NSString* path = [self.detailItem valueForKey:@"nodeName"];
+    NSString* title = [path lastPathComponent];
+    self.titleView.text = title;
     [self.titleView sizeToFit];
     self.navigationItem.titleView = self.titleView;
     
